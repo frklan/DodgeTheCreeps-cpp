@@ -1,6 +1,6 @@
 # Dode the Creeps
 
-Second attemt at following "Your first game" tutorial over at [Godot Docs](https://docs.godotengine.org/en/3.1/getting_started/step_by_step/your_first_game.html). All source code converted into C++.
+Second attempt at following "Your first game" tutorial over at [Godot Docs](https://docs.godotengine.org/en/3.1/getting_started/step_by_step/your_first_game.html). All source code converted into C++.
 
 As I stated in my [first attemt](https://github.com/frklan/DodgeTheCreeps) at following the tutorial, I'd like to code in C++. Not that C++ is better, just that I do like it and want to practise.
 
@@ -12,13 +12,13 @@ Make sure ````CXX```` and ````CC```` environment variables points to valid compi
 
 ````
 cd src/godot-cpp
-scons platform=osx bits=64 generate_bindings=yes
+scons platform=<os> bits=64 generate_bindings=yes
 ````
 
 ### Project C++ source
 
 ````
-scons platform=<os> 
+scons platform=<os> target=debug
 ````
 
 ### Godot game
