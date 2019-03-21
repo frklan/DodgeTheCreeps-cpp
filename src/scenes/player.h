@@ -9,6 +9,7 @@ namespace godot {
 
     public:
       static void _register_methods();
+      static void _bind_methods();
 
       Player();
       virtual ~Player() {}
@@ -16,15 +17,16 @@ namespace godot {
       void _init();
       void _ready();
       void _process(float delta);
-
+      void onBodyentered(Object* object);
+      void start(Vector2 pos);
 
       float getSpeed() const noexcept { return speed; }
-      void setSpeed(float speed) noexcept { this->speed = speed; }
+      void setSpeed(float newSpeed) noexcept { this->speed = newSpeed; }
 
     private:
       float speed;
       Size2 screenSize;
-      
+
       float clamp(const float value, const float min, const float max);
   };
 }
