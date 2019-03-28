@@ -27,8 +27,8 @@ animations = [ {
 } ]
 
 [sub_resource type="CapsuleShape2D" id=2]
-radius = 35.7588
-height = 28.3344
+radius = 23.9763
+height = 18.7612
 
 [node name="Mob" type="RigidBody2D"]
 collision_mask = 0
@@ -37,12 +37,12 @@ script = ExtResource( 1 )
 __meta__ = {
 "_edit_group_": true
 }
+"Maximum speed" = 650.0
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
-scale = Vector2( 0.75, 0.75 )
+scale = Vector2( 0.5, 0.5 )
 frames = SubResource( 1 )
 animation = "swim"
-frame = 1
 playing = true
 __meta__ = {
 "_edit_group_": true

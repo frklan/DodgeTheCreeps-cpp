@@ -18,6 +18,7 @@ namespace godot {
       void _ready();
       void _process(float delta);
       void onBodyentered(Object* object);
+      void onPlayerHit();
       void start(Vector2 pos);
 
       float getSpeed() const noexcept { return speed; }

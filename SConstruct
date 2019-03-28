@@ -46,8 +46,8 @@ if env['platform'] == '':
 if env['platform'] == "osx":
     env['target_path'] += 'osx/'
     cpp_library += '.osx'
-    if env['target'] in ('debug', 'd'):
-        env.Append(CCFLAGS = ['-g','-O2', '-arch', 'x86_64', '-std=c++17'])
+    if env['target'] in ('debug', 'd'): 
+        env.Append(CCFLAGS = ['-g', '-arch', 'x86_64', '-std=c++17'])
         env.Append(LINKFLAGS = ['-arch', 'x86_64'])
     else:
         env.Append(CCFLAGS = ['-g','-O3', '-arch', 'x86_64', '-std=c++17'])

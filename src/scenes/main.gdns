@@ -3,7 +3,7 @@
 [ext_resource path="res://src/dodgelib.gdnlib" type="GDNativeLibrary" id=1]
 
 [resource]
-resource_name = "player"
-class_name = "Player"
+resource_name = "main"
+class_name = "Main"
 library = ExtResource( 1 )
 

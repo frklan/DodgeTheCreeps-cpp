@@ -11,8 +11,8 @@ namespace godot {
       static void _register_methods();
     
       Mob();
-      virtual ~Mob() {}
-
+      virtual ~Mob() = default;
+      
       void _init();
       void _ready();
       void onScreenExited();
@@ -23,10 +23,13 @@ namespace godot {
       void setMaxSpeed(float speed) noexcept { this->maxSpeed = speed; }
       float getMaxSpeed() const noexcept { return maxSpeed; }
 
+      bool unreference(){ return true; };
+      bool init_ref(){ return true; };
+	    bool reference(){ return true; };
 
     private:
-      float minSpeed = 150;
-      float maxSpeed = 250;
+      float minSpeed;
+      float maxSpeed;
 
       const Array mobType = Array::make<godot::String>("walk", "swim", "fly");
   };

@@ -11,13 +11,13 @@ namespace godot {
   { }
   
   void Mob::_register_methods() {
-    //register_property<Mob, float>("Minimum speed", &Mob::setMinSpeed, &Mob::getMinSpeed, 150);
-    //register_property<Mob, float>("Maximum speed", &Mob::setMaxSpeed, &Mob::getMaxSpeed, 250);
+    register_property<Mob, float>("Minimum speed", &Mob::setMinSpeed, &Mob::getMinSpeed, 150);
+    register_property<Mob, float>("Maximum speed", &Mob::setMaxSpeed, &Mob::getMaxSpeed, 250);
     
     register_method("_init", &Mob::_init);
     register_method("_ready", &Mob::_ready);    
-    register_method("onScreenExited", &Mob::onScreenExited);    
-    
+    register_method("onScreenExited", &Mob::onScreenExited);
+    register_method("getMaxSpeed", &Mob::getMaxSpeed);
   }
 
   void Mob::_init() {
@@ -25,7 +25,6 @@ namespace godot {
   }
 
   void Mob::_ready() {
-    Godot::print("Mob::_ready()");
     std::mt19937 rng;
     rng.seed(std::random_device()());
     std::uniform_int_distribution<std::mt19937::result_type> dist(0, mobType.size() - 1);
@@ -38,7 +37,6 @@ namespace godot {
   }
 
   void Mob::onScreenExited() {
-    Godot::print("mob moved outside screen.");
     queue_free();
   }
 

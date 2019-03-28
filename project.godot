@@ -16,12 +16,18 @@ _global_script_class_icons={
 [application]
 
 config/name="Dode the Creeps - C++"
+run/main_scene="res://scenes/main/main.tscn"
 config/icon="res://icon.png"
 
 [display]
 
-window/size/width=1080
-window/size/height=1920
+window/size/width=480
+window/size/height=720
+window/size/resizable=false
+
+[physics]
+
+2d/default_linear_damp=0.0
 
 [rendering]
 
