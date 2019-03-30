@@ -7,14 +7,16 @@ reloadable=true
 
 [entry]
 
-OSX.64="res://build/bin/osx/libdodge.dylib"
-Windows.64="res://build/bin/Windows/libdodge.dll"
-X11.64="res://build/bin/X11/libdodge.so"
-iOS.arm64="res://build/bin/ios/libdodge.a"
+OSX.64="res://build/lib/osx/libdodge.osx.64.dylib"
+Windows.64="res://build/lib/Windows/libdodge.Windows.64.dll"
+X11.64="res://build/lib/X11/libdodge.X11.64.so"
+iOS.arm64="res://build/lib/ios/libdodge.ios.64.a"
+iOS.x86_64="res://build/lib/ios/libdodge.ios.simulator.64.a"
 
 [dependencies]
 
 OSX.64=[  ]
 Windows.64=[  ]
 X11.64=[  ]
-iOS.arm64=[ "res://src/godot-cpp/bin/libgodot-cpp.osx.debug.64.a" ]
+iOS.arm64=[ "res://lib/godot-cpp/bin/libgodot-cpp.ios.debug.64.a" ]
+iOS.x86_64=[ "res://lib/godot-cpp/bin/libgodot-cpp.ios.simulator.debug.64.a" ]

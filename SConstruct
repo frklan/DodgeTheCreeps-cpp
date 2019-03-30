@@ -15,18 +15,19 @@ env = DefaultEnvironment()
 Help(opts.GenerateHelpText(env))
 
 # Define our options
-opts.Add(EnumVariable('target', "Compilation target", 'debug', ['d', 'debug', 'r', 'release']))
+opts.Add(EnumVariable('target', "Compilation target", 'debug', ['debug', 'release']))
 opts.Add(EnumVariable('platform', "Compilation platform", '', ['', 'windows', 'x11', 'linux', 'osx', 'ios', 'ios.simulator']))
-opts.Add(EnumVariable('p', "Compilation target, alias for 'platform'", '', ['', 'windows', 'x11', 'linux', 'osx', 'ios', 'ios.simulator']))
-opts.Add(PathVariable('target_path', 'The path where the lib is installed.', 'build/bin/'))
+opts.Add(PathVariable('target_path', 'The path where the lib is installed.', 'build/lib/'))
 opts.Add(PathVariable('target_name', 'The library name.', 'libdodge', PathVariable.PathAccept))
 opts.Add(EnumVariable('static', "static lib", 'no', ['no', 'yes']))
+opts.Add(PathVariable('godot_cpp_bindings_path', 'Path to Godot CPP', 'lib/godot-cpp/'))
+opts.Add(PathVariable('godot_cpp_library', 'Godot CPP library name', 'libgodot-cpp', PathVariable.PathAccept))
 
+# Updates the environment with the option variables.
+opts.Update(env)
 
 # Local dependency paths, adapt them to your setup
-godot_headers_path = "src/godot-cpp/godot_headers/"
-cpp_bindings_path = "src/godot-cpp/"
-cpp_library = "libgodot-cpp"
+env['godot_headers_path'] = env['godot_cpp_bindings_path'] + 'godot_headers/'
 
 # honour CC and CXX
 env['CC'] = os.environ['CC']
@@ -35,13 +36,6 @@ env['CXX'] = os.environ['CXX']
 # only support 64 at this time..
 bits = 64
 
-# Updates the environment with the option variables.
-opts.Update(env)
-
-# Process some arguments
-if env['p'] != '':
-    env['platform'] = env['p']
-
 if env['platform'] == '':
     print("No valid target platform selected.")
     quit();
@@ -49,7 +43,7 @@ if env['platform'] == '':
 # Check our platform specifics
 if env['platform'] == "osx":
     env['target_path'] += 'osx/'
-    cpp_library += '.osx'
+    env['godot_cpp_library'] += '.osx'
     if env['target'] in ('debug', 'd'): 
         env.Append(CCFLAGS = ['-g', '-arch', 'x86_64', '-std=c++17'])
         env.Append(LINKFLAGS = ['-arch', 'x86_64'])
@@ -59,7 +53,7 @@ if env['platform'] == "osx":
 
 elif env['platform'] == "ios":
     env['target_path'] += 'ios/'
-    cpp_library += '.ios'
+    env['godot_cpp_library'] += '.ios'
     IOS_PLATFORM_SDK = sys_exec(["xcode-select", "-p"]) + "/Platforms"
     SDK_VERSION = sys_exec(["xcodebuild", "-sdk", "iphoneos", "-version", "|", "grep", "SDKVersion", "|", "awk", "'{print$2}'])"])
     SDK_MIN_VERSION = "10.3"   
@@ -74,15 +68,15 @@ elif env['platform'] == "ios":
     '-miphoneos-version-min=%s' % SDK_MIN_VERSION])
 
 
-    if env['target'] in ('debug','d'):
+    if env['target'] in ('debug'):
       env.Append(CCFLAGS = ['-g']) 
     else:
       env.Append(CCFLAGS = ['-O3'])
 
 elif env['platform'] == "ios.simulator":
     env['static'] = 'yes'
-    env['target_path'] += 'ios.simulator/'
-    cpp_library += '.ios.simulator'
+    env['target_path'] += 'ios/'
+    env['godot_cpp_library'] += '.ios.simulator'
     
     IOS_PLATFORM_SDK = sys_exec(["xcode-select", "-p"]) + "/Platforms"
     SDK_VERSION = sys_exec(["xcodebuild", "-sdk", "iphonesimulator", "-version", "|", "grep", "SDKVersion", "|", "awk", "'{print$2}'])"])
@@ -98,46 +92,45 @@ elif env['platform'] == "ios.simulator":
     '-miphoneos-version-min=%s' % SDK_MIN_VERSION])
     
 
-    if env['target'] in ('debug','d'):
+    if env['target'] in ('debug'):
       env.Append(CCFLAGS = ['-g']) 
     else:
       env.Append(CCFLAGS = ['-O3'])
 
 elif env['platform'] in ('x11', 'linux'):
     env['target_path'] += 'x11/'
-    cpp_library += '.linux'
-    if env['target'] in ('debug', 'd'):
+    env['godot_cpp_library'] += '.linux'
+    if env['target'] in ('debug'):
         env.Append(CCFLAGS = ['-fPIC', '-g3','-Og', '-std=c++17'])
     else:
         env.Append(CCFLAGS = ['-fPIC', '-g','-O3', '-std=c++17'])
 
 elif env['platform'] == "windows":
     env['target_path'] += 'win64/'
-    cpp_library += '.windows'
+    env['godot_cpp_library'] += '.windows'
     # This makes sure to keep the session environment variables on windows,
     # that way you can run scons in a vs 2017 prompt and it will find all the required tools
     env.Append(ENV = os.environ)
 
     env.Append(CCFLAGS = ['-DWIN32', '-D_WIN32', '-D_WINDOWS', '-W3', '-GR', '-D_CRT_SECURE_NO_WARNINGS'])
-    if env['target'] in ('debug', 'd'):
+    if env['target'] in ('debug'):
         env.Append(CCFLAGS = ['-EHsc', '-D_DEBUG', '-MDd'])
     else:
         env.Append(CCFLAGS = ['-O2', '-EHsc', '-DNDEBUG', '-MD'])
 
-if env['target'] in ('debug', 'd'):
-    cpp_library += '.debug'
-else:
-    cpp_library += '.release'
 
-cpp_library += '.' + str(bits)
+
+env['godot_cpp_library'] += '.' + env['target']
+env['godot_cpp_library'] += '.' + str(bits)
+env['target_name'] += '.' + env['platform'] + '.' + str(bits)
 
 # make sure our binding library is properly includes
-env.Append(CPPPATH=['.', godot_headers_path, cpp_bindings_path + 'include/', cpp_bindings_path + 'include/core/', cpp_bindings_path + 'include/gen/'])
-env.Append(LIBPATH=[cpp_bindings_path + 'bin/'])
-env.Append(LIBS=[cpp_library])
+env.Append(CPPPATH=['.', env['godot_headers_path'], env['godot_cpp_bindings_path'] + 'include/', env['godot_cpp_bindings_path'] + 'include/core/', env['godot_cpp_bindings_path'] + 'include/gen/'])
+env.Append(LIBPATH=[env['godot_cpp_bindings_path'] + 'bin/'])
+env.Append(LIBS=[env['godot_cpp_library']])
 
 # tweak this if you want to use different folders, or more folders, to store your source code in.
-env.Append(CPPPATH=['src/'])
+env.Append(CPPPATH=['godot/src/'])
 sources = Glob('src/*.cpp')
 sources += Glob('src/scenes/*.cpp')
 
