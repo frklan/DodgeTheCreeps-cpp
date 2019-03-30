@@ -188,6 +188,8 @@ Debugging is done using Xcode, just navigate to the source file you're intereset
 ## TODO
 
 - [x] compile to iOS
+- [ ] fix UI for ios
+- [ ] add game controls for ios
 
 ## Contributing
 
