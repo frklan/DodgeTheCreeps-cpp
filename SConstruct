@@ -1,6 +1,11 @@
 #!python
 import os, subprocess
 
+def sys_exec(args):
+    proc = subprocess.Popen(args, stdout=subprocess.PIPE)
+    (out, err) = proc.communicate()
+    return out.rstrip("\r\n").lstrip()
+
 opts = Variables([], ARGUMENTS)
 
 # Gets the standard flags CC, CCX, etc.
@@ -11,9 +16,8 @@ Help(opts.GenerateHelpText(env))
 
 # Define our options
 opts.Add(EnumVariable('target', "Compilation target", 'debug', ['d', 'debug', 'r', 'release']))
-opts.Add(EnumVariable('platform', "Compilation platform", '', ['', 'windows', 'x11', 'linux', 'osx', 'ios']))
-opts.Add(EnumVariable('p', "Compilation target, alias for 'platform'", '', ['', 'windows', 'x11', 'linux', 'osx', 'ios']))
-opts.Add(BoolVariable('use_llvm', "Use the LLVM / Clang compiler", 'no'))
+opts.Add(EnumVariable('platform', "Compilation platform", '', ['', 'windows', 'x11', 'linux', 'osx', 'ios', 'ios.simulator']))
+opts.Add(EnumVariable('p', "Compilation target, alias for 'platform'", '', ['', 'windows', 'x11', 'linux', 'osx', 'ios', 'ios.simulator']))
 opts.Add(PathVariable('target_path', 'The path where the lib is installed.', 'build/bin/'))
 opts.Add(PathVariable('target_name', 'The library name.', 'libdodge', PathVariable.PathAccept))
 opts.Add(EnumVariable('static', "static lib", 'no', ['no', 'yes']))
@@ -52,6 +56,52 @@ if env['platform'] == "osx":
     else:
         env.Append(CCFLAGS = ['-g','-O3', '-arch', 'x86_64', '-std=c++17'])
         env.Append(LINKFLAGS = ['-arch', 'x86_64'])
+
+elif env['platform'] == "ios":
+    env['target_path'] += 'ios/'
+    cpp_library += '.ios'
+    IOS_PLATFORM_SDK = sys_exec(["xcode-select", "-p"]) + "/Platforms"
+    SDK_VERSION = sys_exec(["xcodebuild", "-sdk", "iphoneos", "-version", "|", "grep", "SDKVersion", "|", "awk", "'{print$2}'])"])
+    SDK_MIN_VERSION = "10.3"   
+
+
+    env.Append(CCFLAGS = ['-arch', 'arm64', '-arch', 'armv7', '-arch', 'armv7s', '-std=c++17', 
+     '-isysroot', ('%s/iPhoneOS.platform/Developer/SDKs/iPhoneOS%s.sdk' % (IOS_PLATFORM_SDK, SDK_VERSION)),  
+     ('-miphoneos-version-min=%s' % SDK_MIN_VERSION)])
+    
+    env.Append(LINKFLAGS = ['-arch', 'arm64', '-arch', 'armv7', '-arch', 'armv7s',
+    '-isysroot', '%s/iPhoneOS.platform/Developer/SDKs/iPhoneOS%s.sdk' % (IOS_PLATFORM_SDK, SDK_VERSION) , 
+    '-miphoneos-version-min=%s' % SDK_MIN_VERSION])
+
+
+    if env['target'] in ('debug','d'):
+      env.Append(CCFLAGS = ['-g']) 
+    else:
+      env.Append(CCFLAGS = ['-O3'])
+
+elif env['platform'] == "ios.simulator":
+    env['static'] = 'yes'
+    env['target_path'] += 'ios.simulator/'
+    cpp_library += '.ios.simulator'
+    
+    IOS_PLATFORM_SDK = sys_exec(["xcode-select", "-p"]) + "/Platforms"
+    SDK_VERSION = sys_exec(["xcodebuild", "-sdk", "iphonesimulator", "-version", "|", "grep", "SDKVersion", "|", "awk", "'{print$2}'])"])
+    SDK_MIN_VERSION = "10.3"   
+
+
+    env.Append(CCFLAGS = ['-arch', 'x86_64', '-std=c++17', 
+     '-isysroot', ('%s/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator%s.sdk' % (IOS_PLATFORM_SDK, SDK_VERSION)),  
+     ('-miphoneos-version-min=%s' % SDK_MIN_VERSION)])
+    
+    env.Append(LINKFLAGS = ['-arch', 'x86_64',
+    '-isysroot', '%s/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator%s.sdk' % (IOS_PLATFORM_SDK, SDK_VERSION) , 
+    '-miphoneos-version-min=%s' % SDK_MIN_VERSION])
+    
+
+    if env['target'] in ('debug','d'):
+      env.Append(CCFLAGS = ['-g']) 
+    else:
+      env.Append(CCFLAGS = ['-O3'])
 
 elif env['platform'] in ('x11', 'linux'):
     env['target_path'] += 'x11/'
