@@ -12,6 +12,9 @@
 #include <Position2D.hpp>
 #include <PathFollow2D.hpp>
 #include <AudioStreamPlayer.hpp>
+#include <Viewport.hpp>
+#include <Curve2D.hpp>
+#include <Path2D.hpp>
 
 #include "main.h"
 #include "mob.h"
@@ -48,6 +51,18 @@ namespace godot {
 
     hud = cast_to<HUD>(get_node("HUD"));
     hud->connect("startGame", this, "startNewGame");
+
+    auto viewport = get_viewport();
+    auto screenSize= viewport->get_size();
+
+    // set path elemts to screen edge
+    auto curve = cast_to<Path2D>(get_node("MobPath"))->get_curve();
+    curve->clear_points();
+    curve->add_point({0, 0});
+    curve->add_point({screenSize.width, 0});
+    curve->add_point({screenSize.width, screenSize.height});
+    curve->add_point({0, screenSize.height});
+    curve->add_point({0, 0});
   }
 
   void Main::_process(float delta) {
