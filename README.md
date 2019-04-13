@@ -162,14 +162,16 @@ Follow the official Godot iOS export guide [here](https://docs.godotengine.org/e
 In Xcode the following settings needs to be updated
 
 1. Update the valid architectures to reflect if we're runing in the simualtor (x86_64) or on a real device (arm64, armv7 etc.)
-2. add ```(PROJECT_DIR)/DodetheCreeps/lib/godot-cpp/bin``` and ```$(PROJECT_DIR)/DodetheCreeps/build/lib/ios``` to the Library Search Paths
+2. add ```$(PROJECT_DIR)/DodegtheCreeps/lib/godot-cpp/bin``` and ```$(PROJECT_DIR)/DodgetheCreeps/build/lib/ios``` to the Library Search Paths
 3. Set development target to 10.3
+4. Add GameKit.frameworks to Linked Frameworks and Libraries
+5. Unless you have a paid Apple Developer license, push notification and gamecenter capabilites needs to be disabled.
 
-If you follow the Active development considerations in the Godot documentation (which you probably should) the Library Search Paths shoule be set to ```$(PROJECT_DIR)/DodetheCreeps/lib/godot-cpp/bin``` and ```[path to repo]/build/lib/ios```
+If you follow the Active development considerations in the Godot documentation (which you probably should) the Library Search Paths shoule be set to ```$(PROJECT_DIR)/DodgetheCreeps/lib/godot-cpp/bin``` and ```[path to repo]/build/lib/ios```
 
-**Note that the full soruce code will be included in the app package doing this**
+**Note that the full source code will be included in the app package doing this**
 
-Currently the repo does not contain image assets as required by Xcode, hence the Images.xcassets resource must be deleted in Xcode.
+It seems that iOS/Xcode is pretty sensitive to having about a million icons and launch images, if the app starts with black bars above and below the game it can be resolved by using a storyboard as launch screen instead of an image set.
 
 ## Debuging
 
@@ -188,7 +190,7 @@ Debugging is done using Xcode, just navigate to the source file you're intereset
 ## TODO
 
 - [x] compile to iOS
-- [ ] fix UI for ios
+- [x] fix UI for ios
 - [ ] add game controls for ios
 
 ## Contributing
