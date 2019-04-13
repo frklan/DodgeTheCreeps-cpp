@@ -6,6 +6,8 @@ In my [first attemt](https://github.com/frklan/DodgeTheCreeps) following the tut
 
 While, I'll continue to use C++ with Godot, it's most probably quite stupid to write a full game in C++; GDScript takes care of lot of stuff for you that you'll have to do manually in C++ and It's much quicker to code in. Still I prefer C++..
 
+**Note** commits after [bfddbd8](https://github.com/frklan/DodgeTheCreeps-cpp/tree/bfddbd81778774ae6d41dd8956ac3e667ca37010) adds features or functions not in the original Godot tutorial, i.e. commit [bfddbd8](https://github.com/frklan/DodgeTheCreeps-cpp/tree/bfddbd81778774ae6d41dd8956ac3e667ca37010) is pretty comparable to my [first attemt](https://github.com/frklan/DodgeTheCreeps).
+
 ## Compiling for OSX
 
 (this will most probably work for Linux and possibly even for Windows)
@@ -195,7 +197,7 @@ Debugging is done using Xcode, just navigate to the source file you're intereset
 
 ## Contributing
 
-I don't expect to updated this project, still contributions are always welcome!
+~~I don't expect to updated this project, still~~ contributions are always welcome!
 
 When contributing to this repository, please first discuss the change you wish to make via the issue tracker, email, or any other method with the owner of this repository before making a change.
 
