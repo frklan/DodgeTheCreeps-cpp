@@ -2,6 +2,8 @@
 #include <Godot.hpp>
 #include <AnimatedSprite.hpp>
 #include <Input.hpp>
+#include <InputEvent.hpp>
+#include <InputEventScreenDrag.hpp>
 #include <OS.hpp>
 #include <Object.hpp>
 #include <CollisionShape2D.hpp>
@@ -20,6 +22,7 @@ namespace godot {
     register_method("_init", &Player::_init);
     register_method("_ready", &Player::_ready);
     register_method("_process", &Player::_process);
+    register_method("_input", &Player::_input);
     register_method("onBodyentered", &Player::onBodyentered);
     register_method("onPlayerHit", &Player::onPlayerHit);
 
@@ -80,6 +83,14 @@ namespace godot {
     } else if(velocity.y != 0) {
       sprite->set_animation("up");
       sprite->set_flip_v(velocity.y > 0);
+    }
+  }
+
+  void Player::_input(InputEvent* event) {
+    if(event->is_class("InputEventScreenDrag")) {
+      auto e = cast_to<InputEventScreenDrag>(event);
+      auto pos = e->get_position();
+      set_position(pos);
     }
   }
 

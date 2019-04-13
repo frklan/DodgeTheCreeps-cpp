@@ -17,6 +17,7 @@ namespace godot {
       void _init();
       void _ready();
       void _process(float delta);
+      void _input(InputEvent* event);
       void onBodyentered(Object* object);
       void onPlayerHit();
       void start(Vector2 pos);
