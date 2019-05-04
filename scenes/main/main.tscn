@@ -15,7 +15,6 @@ _data = {
 script = ExtResource( 1 )
 
 [node name="Player" parent="." instance=ExtResource( 2 )]
-Sspeed = 450.0
 
 [node name="MobTimer" type="Timer" parent="."]
 wait_time = 0.5

@@ -7,6 +7,7 @@
 #include <OS.hpp>
 #include <Object.hpp>
 #include <CollisionShape2D.hpp>
+#include <KinematicCollision2D.hpp>
 
 #include "player.h"
 #include "mob.h"
@@ -21,7 +22,7 @@ namespace godot {
 
     register_method("_init", &Player::_init);
     register_method("_ready", &Player::_ready);
-    register_method("_process", &Player::_process);
+    register_method("_physics_process", &Player::_process);
     register_method("_input", &Player::_input);
     register_method("onBodyentered", &Player::onBodyentered);
     register_method("onPlayerHit", &Player::onPlayerHit);
@@ -36,7 +37,7 @@ namespace godot {
 
   void Player::_ready() {
     screenSize = get_viewport_rect().size;
-    this->connect("body_entered", this, "onBodyentered");
+    //this->connect("body_entered", this, "onBodyentered");
     this->connect("hit", this, "onPlayerHit");
     this->hide();
   }
@@ -68,13 +69,20 @@ namespace godot {
       sprite->stop();
     }
 
-    auto position = this->get_position();
-    position += velocity * delta;
-    position.x = clamp(position.x, 0 , screenSize.x);
-    position.y = clamp(position.y, 0 , screenSize.y);
-    this->set_position(position);
+    if(velocity.length() > 0) {
+      
+      auto collision = this->move_and_collide(velocity * delta);
+      if(collision.is_valid()) {
+        onBodyentered(collision->get_collider());
+      }
     
-    
+      auto position = this->get_position();
+      if(position.x < 0) position.x = 0;
+      if(position.x > screenSize.x) position.x = screenSize.x;
+      if(position.y > screenSize.y) position.y = screenSize.y;
+      if(position.y < 0) position.y = 0;
+      set_position(position);
+    }
 
     if(velocity.x != 0) {
       sprite->set_animation("right");

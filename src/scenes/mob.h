@@ -1,11 +1,11 @@
 #pragma once
 
 #include <Godot.hpp>
-#include <RigidBody2D.hpp>
+#include <KinematicBody2D.hpp>
 
 namespace godot {
-  class Mob : public RigidBody2D {
-    GODOT_CLASS(Mob, RigidBody2D)
+  class Mob : public KinematicBody2D {
+    GODOT_CLASS(Mob, KinematicBody2D)
 
     public:
       static void _register_methods();
@@ -14,7 +14,9 @@ namespace godot {
       virtual ~Mob() = default;
       
       void _init();
+      void _draw();
       void _ready();
+      void _physics_process(float delta);
       void onScreenExited();
 
       void setMinSpeed(float speed) noexcept { this->minSpeed = speed; }
@@ -27,9 +29,16 @@ namespace godot {
       bool init_ref(){ return true; };
 	    bool reference(){ return true; };
 
+      void setTarget(Vector2 newTarget) { 
+        target = newTarget;
+        std::cout << "x = " << target.x << '\n';
+        std::cout << "y = " << target.y << '\n';
+      }
+
     private:
       float minSpeed;
       float maxSpeed;
+      Vector2 target;
 
       const Array mobType = Array::make<godot::String>("walk", "swim", "fly");
   };

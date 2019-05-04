@@ -23,11 +23,9 @@ animations = [ {
 radius = 27.1118
 height = 13.2425
 
-[node name="Player" type="Area2D"]
+[node name="Player" type="KinematicBody2D"]
+collision_mask = 2
 script = ExtResource( 1 )
-__meta__ = {
-"_edit_group_": true
-}
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 scale = Vector2( 0.5, 0.5 )

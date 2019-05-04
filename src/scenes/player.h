@@ -1,11 +1,11 @@
 #pragma once
 
 #include <Godot.hpp>
-#include <Area2D.hpp>
+#include <KinematicBody2D.hpp>
 
 namespace godot {
-  class Player : public Area2D {
-    GODOT_CLASS(Player, Area2D)
+  class Player : public KinematicBody2D {
+    GODOT_CLASS(Player, KinematicBody2D)
 
     public:
       static void _register_methods();

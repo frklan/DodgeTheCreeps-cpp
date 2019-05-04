@@ -98,27 +98,40 @@ namespace godot {
     // # Create a Mob instance and add it to the scene.
     // var mob = Mob.instance()
     // add_child(mob)
-    auto newMob = cast_to<RigidBody2D>(mobScene->instance());
+    auto newMob = cast_to<KinematicBody2D>(mobScene->instance());
     newMob->set_name("Mob");
     get_node("MobHolder")->add_child(newMob);
 
     // # Set the mob's position to a random location.
     // mob.position = $MobPath/MobSpawnLocation.position
     newMob->set_position(spawnLocation->get_position());
+    //newMob->set_position({getRandom(500, 1000), getRandom(500, 1000)});
     
     // # Set the mob's direction perpendicular to the path direction.
     // var direction = $MobPath/MobSpawnLocation.rotation + PI / 2
-    auto direction = spawnLocation->get_rotation() + M_PI_2;
+    //auto direction = spawnLocation->get_rotation() + M_PI_2;
+    //auto direction = M_PI_2;
+    auto direction = getRandom(0, M_PI * 2);
 
     // # Add some randomness to the direction.
     // direction += rand_range(-PI / 4, PI / 4)
     // mob.rotation = direction
-    direction += getRandom(-M_PI_4, M_PI_4);
-    newMob->set_rotation(direction);
+    //direction += getRandom(-M_PI_4, M_PI_4);
+    newMob->set_rotation(-direction);
+    float l = getRandom(1000, 3000);
 
+    auto y = newMob->get_position().y - sin(direction) * l;
+    auto x = newMob->get_position().x + cos(direction) * l;
+    
+    std::cout << "pos = " << newMob->get_position().x << ':' << newMob->get_position().y << '\n';
+    std::cout << "direction = " << direction << '\n';
+  
+    //auto x = newMob->get_position().x - getRandom(-10510, -10010);
+    //auto y = newMob->get_position().y - getRandom(-10100, -10050); 
+    cast_to<Mob>(newMob)->setTarget({static_cast<float_t>(x), static_cast<float_t>(y)});
     // # Choose the velocity.
     // mob.set_linear_velocity(Vector2(rand_range(mob.min_speed, mob.max_speed), 0).rotated(direction))
-    newMob->set_linear_velocity(Vector2(getRandom(150, 250), 0).rotated(direction));
+    //newMob->set_linear_velocity(Vector2(getRandom(150, 250), 0).rotated(direction));
   }
 
   void Main::startNewGame() {
