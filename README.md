@@ -193,7 +193,7 @@ Debugging is done using Xcode, just navigate to the source file you're intereset
 
 - [x] compile to iOS
 - [x] fix UI for ios
-- [ ] add game controls for ios
+- [x] add game controls for ios (took, like, forever to come up with something that works..)
 
 ## Contributing
 
