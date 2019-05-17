@@ -31,8 +31,8 @@ namespace godot {
 
       void setTarget(Vector2 newTarget) { 
         target = newTarget;
-        std::cout << "x = " << target.x << '\n';
-        std::cout << "y = " << target.y << '\n';
+        //std::cout << "x = " << target.x << '\n';
+        //std::cout << "y = " << target.y << '\n';
       }
 
     private:

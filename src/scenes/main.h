@@ -40,6 +40,7 @@ namespace godot {
     //std::uniform_int_distribution<std::mt19937::result_type> dist;
     
     godot::Ref<PackedScene> mobScene;
+    godot::Ref<PackedScene> touchPadScene;
 
     float getRandom(float min = 0.0f, float max = 32565.0f);
     void purgeMobs();

@@ -12,8 +12,8 @@ namespace godot {
   { }
   
   void Mob::_register_methods() {
-    register_property<Mob, float>("Minimum speed", &Mob::setMinSpeed, &Mob::getMinSpeed, 150);
-    register_property<Mob, float>("Maximum speed", &Mob::setMaxSpeed, &Mob::getMaxSpeed, 250);
+    register_property<Mob, float>("Minimum speed", &Mob::setMinSpeed, &Mob::getMinSpeed, 15);
+    register_property<Mob, float>("Maximum speed", &Mob::setMaxSpeed, &Mob::getMaxSpeed, 25);
     
     register_method("_draw", &Mob::_draw);
     register_method("_init", &Mob::_init);
@@ -41,10 +41,10 @@ namespace godot {
 
   void Mob::_physics_process(float delta) {
     auto m = target - get_position();
-    auto collision = move_and_collide(m * delta * 0.1f);
+    auto collision = move_and_collide(m * delta * 0.01f);
     
     if(collision.is_valid()) {
-      cast_to<Player>(get_node("/root")->find_node("Player", true, false))->onBodyentered(this);
+      cast_to<Player>(get_node("/root")->find_node("Player", true, false))->onCollision(this);
     }
   }
 

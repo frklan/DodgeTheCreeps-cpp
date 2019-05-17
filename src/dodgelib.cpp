@@ -3,6 +3,7 @@
 #include "scenes/mob.h"
 #include "scenes/main.h"
 #include "scenes/hud.h"
+#include "scenes/touchpad.h"
 
 extern "C" void GDN_EXPORT godot_gdnative_init(godot_gdnative_init_options *o) {
   godot::Godot::gdnative_init(o);
@@ -19,4 +20,5 @@ extern "C" void GDN_EXPORT godot_nativescript_init(void *handle) {
   godot::register_class<godot::Mob>();
   godot::register_class<godot::Main>();
   godot::register_class<godot::HUD>();
+  godot::register_class<godot::Touchpad>();
 }

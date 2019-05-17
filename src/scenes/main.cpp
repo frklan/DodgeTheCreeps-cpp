@@ -20,6 +20,7 @@
 #include "mob.h"
 #include "hud.h"
 #include "player.h"
+#include "touchpad.h"
 
 namespace godot {
 
@@ -38,6 +39,7 @@ namespace godot {
   Main::Main() {
     rng.seed(std::random_device()());
     mobScene = ResourceLoader::get_singleton()->load("res://scenes/mob/mob.tscn");
+    touchPadScene = ResourceLoader::get_singleton()->load("res://scenes/touchpad/touchpad.tscn");
   }
 
   void Main::_init() {
@@ -75,6 +77,10 @@ namespace godot {
 
     cast_to<AudioStreamPlayer>(get_node("BackgroundMusic"))->stop();
     cast_to<AudioStreamPlayer>(get_node("SoundEffects"))->play();
+
+    auto touchPad = cast_to<Touchpad>(get_node("Touchpad"));
+    touchPad->set_deferred("disabled", true);
+    touchPad->set_visible(false);
   }
 
   void Main::onStartTimerTimeOut() {
@@ -118,14 +124,11 @@ namespace godot {
     // mob.rotation = direction
     //direction += getRandom(-M_PI_4, M_PI_4);
     newMob->set_rotation(-direction);
-    float l = getRandom(1000, 3000);
+    float l = getRandom(10000, 30000);
 
     auto y = newMob->get_position().y - sin(direction) * l;
     auto x = newMob->get_position().x + cos(direction) * l;
     
-    std::cout << "pos = " << newMob->get_position().x << ':' << newMob->get_position().y << '\n';
-    std::cout << "direction = " << direction << '\n';
-  
     //auto x = newMob->get_position().x - getRandom(-10510, -10010);
     //auto y = newMob->get_position().y - getRandom(-10100, -10050); 
     cast_to<Mob>(newMob)->setTarget({static_cast<float_t>(x), static_cast<float_t>(y)});
@@ -140,6 +143,10 @@ namespace godot {
     auto startPos = cast_to<Position2D>(get_node("StartPosition"))->get_position();
     cast_to<Player>(get_node("Player"))->start(startPos);
     
+    auto touchPad = cast_to<Touchpad>(get_node("Touchpad"));
+    touchPad->set_deferred("disabled", false);
+    touchPad->set_visible(true);
+
     score = 0;
     hud->showScore(score);
   
@@ -152,7 +159,7 @@ namespace godot {
     return dist(rng);
   }
 
-  void Main::purgeMobs() {    
+  void Main::purgeMobs() {
     auto mobs = get_node("MobHolder");
     for(auto i = 0; i < mobs->get_child_count(); i++) {
       mobs->get_child(i)->queue_free();
