@@ -194,6 +194,13 @@ Debugging is done using Xcode, just navigate to the source file you're intereset
 - [x] compile to iOS
 - [x] fix UI for ios
 - [x] add game controls for ios (took, like, forever to come up with something that works..)
+- [ ] migrate to godot 3.1.1
+- [ ] proper splash screen
+- [ ] start memu, possibly with a settings dialouge
+- [ ] hide/fade the touchpad when no touch input
+- [ ] make player move when touch controller is keep stationary
+- [ ] high score list
+- [ ] proper mob ai
 
 ## Contributing
 
