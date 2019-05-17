@@ -9,7 +9,7 @@
       "type": "cppdbg",
       "request": "attach",
       "processId": "${command:pickProcess}",
-      "program": "${workspaceFolder}/build/bin/osx/libdodge.dylib",
+      "program": "${workspaceFolder}/build/lib/osx/libdodge.osx.64.dylib",
       "MIMode": "lldb"
     }
   ]
