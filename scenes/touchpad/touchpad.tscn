@@ -4,7 +4,7 @@
 [ext_resource path="res://src/scenes/touchpad.gdns" type="Script" id=2]
 [ext_resource path="res://art/touchpad.png" type="Texture" id=3]
 
-[node name="touchpad_back" type="TextureRect"]
+[node name="Touchpad" type="TextureRect"]
 modulate = Color( 1, 1, 1, 0.0705882 )
 margin_right = 198.0
 margin_bottom = 198.0
@@ -23,4 +23,7 @@ margin_right = 16.0
 margin_bottom = 16.0
 rect_pivot_offset = Vector2( 16, 16 )
 texture = ExtResource( 3 )
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 0.02
 
