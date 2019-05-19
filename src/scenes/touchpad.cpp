@@ -22,8 +22,13 @@ namespace godot {
     register_method("_ready", &Touchpad::_ready);
     register_method("_init", &Touchpad::_init);
     register_method("_input", &Touchpad::_input);
+    register_method("onTouchTimerTimeout", &Touchpad::onTouchTimerTimeout);
 
     register_signal<Touchpad>("touchpad_update");
+  }
+
+  void Touchpad::onTouchTimerTimeout() {
+    setTouchpadPos(currentTouchPos);
   }
 
   void Touchpad::_ready() {
@@ -33,46 +38,44 @@ namespace godot {
     touchpad_ring = cast_to<TextureRect>(find_node("touchpad_ring"));
     assert(touchpad_ring != nullptr);
 
+    touchTimer = cast_to<Timer>(find_node("Timer", true , false));
+    assert(touchTimer != nullptr);
+    touchTimer->connect("timeout", this, "onTouchTimerTimeout");
+    //this->get_tree()->create_timer(2)->connect("timeout", this, "onTouchTimerTimeout");
+    
+
     radius = get_texture()->get_size().width / 2 - touchpad_ring->get_texture()->get_size().width / 2;
     setTouchpadRing2Center();
   }
 
   void Touchpad::_input(InputEvent* event) {
-    if(!OS::get_singleton()->has_touchscreen_ui_hint ()) {
-      if(input->is_mouse_button_pressed(1)) {
-        godot::Vector2 mousePos{0, 0};
-      
         if(event->is_class("InputEventMouseMotion")) {
           auto e = cast_to<InputEventMouseMotion>(event);
-          mousePos = e->get_global_position() - getTouchpadCenter();
+          currentTouchPos = e->get_global_position();
+          touchTimer->stop();
+          touchTimer->start();
         } else if(event->is_class("InputEventMouseButton")) {
           auto e = cast_to<InputEventMouseButton>(event);
-          mousePos = e->get_global_position() - getTouchpadCenter();
+          currentTouchPos = e->get_global_position();
+          touched = e->is_pressed() && this->get_rect().has_point(currentTouchPos);
           
+        } else if(event->is_class("InputEventScreenDrag")) {
+          auto e = cast_to<InputEventScreenDrag>(event);
+          currentTouchPos = e->get_position();
+          touchTimer->stop();
+          touchTimer->start();
+        } else if(event->is_class("InputEventScreenTouch")) {
+          auto e = cast_to<InputEventScreenTouch>(event);
+          currentTouchPos = e->get_position();
+          touched = e->is_pressed() && this->get_rect().has_point(currentTouchPos);
         }
-        mousePos = mousePos.clamped(radius);
-        setTouchpadPos(mousePos);
+
+      if(touched) {
+        setTouchpadPos(currentTouchPos);
       } else {
+        touchTimer->stop();
         setTouchpadRing2Center();
       }
-    } else {
-      godot::Vector2 touchPos{0, 0};
-      if(event->is_class("InputEventScreenTouch")) {
-        auto e = cast_to<InputEventScreenTouch>(event);
-        touchPos = e->get_position() - getTouchpadCenter();
-        if(!e->is_pressed()) { // bail if touch ended!
-          setTouchpadRing2Center();
-          return;
-        }
-      } else if(event->is_class("InputEventScreenDrag")) {
-        auto e = cast_to<InputEventScreenDrag>(event);
-        touchPos = e->get_position() - getTouchpadCenter();
-      } else { 
-          setTouchpadRing2Center();
-      }
-      touchPos = touchPos.clamped(radius);
-      setTouchpadPos(touchPos);
-    }
   }
 
   void Touchpad::setTouchpadRing2Center() {
@@ -87,6 +90,8 @@ namespace godot {
   }
 
   void Touchpad::setTouchpadPos(godot::Vector2 pos) {
+    pos -= getTouchpadCenter();
+    pos = pos.clamped(radius);
     auto strenght = pos.length() / radius * 100;
     auto angle = pos.angle();
 
