@@ -198,7 +198,7 @@ Debugging is done using Xcode, just navigate to the source file you're intereset
 - [ ] proper splash screen
 - [ ] start memu, possibly with a settings dialouge
 - [ ] hide/fade the touchpad when no touch input
-- [ ] make player move when touch controller is keep stationary
+- [x] make player move when touch controller is keep stationary
 - [ ] high score list
 - [ ] proper mob ai
 
