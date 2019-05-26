@@ -3,6 +3,7 @@
 #include <mutex>
 #include <Godot.hpp>
 #include <KinematicBody2D.hpp>
+#include <AnimatedSprite.hpp>
 
 namespace godot {
   class Player : public KinematicBody2D {
@@ -31,6 +32,7 @@ namespace godot {
       float speed;
       Size2 screenSize;
       Vector2 velocity{0, 0};
+      AnimatedSprite* sprite;
       
       float clamp(const float value, const float min, const float max);
   };
