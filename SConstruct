@@ -129,6 +129,9 @@ env.Append(CPPPATH=['.', env['godot_headers_path'], env['godot_cpp_bindings_path
 env.Append(LIBPATH=[env['godot_cpp_bindings_path'] + 'bin/'])
 env.Append(LIBS=[env['godot_cpp_library']])
 
+# create version.cpp
+sys_exec(["./makeversion.sh", "-o", "src/version.cpp"])
+
 # tweak this if you want to use different folders, or more folders, to store your source code in.
 env.Append(CPPPATH=['godot/src/'])
 sources = Glob('src/*.cpp')
